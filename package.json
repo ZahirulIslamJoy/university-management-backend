@@ -8,7 +8,9 @@
     "lint": "eslint src",
     "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "lint:fix": "eslint src --fix",
-    "prettier:fix":"prettier --write src"
+    "prettier:fix": "prettier --write src",
+    "start:dev":"ts-node-dev --respawn --transpile-only src/server.ts",
+    "start:prod":"node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +33,7 @@
     "eslint-plugin-node": "^11.1.0",
     "globals": "^15.2.0",
     "prettier": "^3.2.5",
+    "ts-node-dev": "^2.0.0",
     "type": "^2.7.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.9.0"
