@@ -1,10 +1,13 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from "bcrypt"
 import {
   Guardian,
   LocalGuardian,
   Student,
+  StudentModels,
   UserName,
 } from './student.interface';
+import config from '../..';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -66,8 +69,9 @@ const localGuradianSchema = new Schema<LocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<Student,StudentModels>({
   id: { type: String , required:true , unique:true },
+  password: { type: String},
   name: {
     type:userNameSchema,
     required:true,
@@ -105,4 +109,20 @@ const studentSchema = new Schema<Student>({
   },
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+studentSchema.pre("save",async function (next){
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password=await bcrypt.hash(user.password,Number(config.salt));
+next();
+})
+
+
+
+
+
+studentSchema.statics.isExists=async function(id:string){
+  const existingUser= await StudentModel.findOne({id});
+  return existingUser;
+}
+
+export const StudentModel = model<Student,StudentModels>('Student', studentSchema);

@@ -2,6 +2,11 @@ import { Student } from './student.interface';
 import { StudentModel } from './student.models';
 
 const createStudentIntoDb = async (student: Student) => {
+
+    if(await StudentModel.isExists(student.id)){
+        throw new Error("user already exists")
+    }
+
     const result = await StudentModel.create(student);
     return result;
 };
