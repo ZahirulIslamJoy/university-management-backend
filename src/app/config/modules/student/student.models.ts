@@ -50,7 +50,7 @@ const guardianSchema = new Schema<Guardian>({
 const localGuradianSchema = new Schema<LocalGuardian>({
   name: {
     type: String,
-    required: true,
+    required: [true,"Name is required vai"],
   },
   occupation: {
     type: String,
@@ -67,8 +67,11 @@ const localGuradianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
-  id: { type: String },
-  name: userNameSchema,
+  id: { type: String , required:true , unique:true },
+  name: {
+    type:userNameSchema,
+    required:true,
+  },
   gender: {
     type:String,
     enum:['male', 'female']
@@ -79,12 +82,21 @@ const studentSchema = new Schema<Student>({
   emergencyContactNo: { type: String, required: true },
   bloogGroup:{
     type:String,
-    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    enum: {
+      values:['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+      message:"{VALUE} is not supported"
+    }
   },
   presentAddress: { type: String, required: true },
   permanentAddres: { type: String, required: true },
-  guardian: guardianSchema,
-  localGuardian: localGuradianSchema,
+  guardian: {
+    type:guardianSchema,
+    required:true
+  },
+  localGuardian: {
+    type:localGuradianSchema,
+    required:true
+  },
   profileImg: { type: String },
   isActive: {
     type:String,
