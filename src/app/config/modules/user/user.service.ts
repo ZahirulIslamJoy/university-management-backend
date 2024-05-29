@@ -9,7 +9,7 @@ const createStudentIntoDb = async (password : string,student: Student) => {
     password = password || config.pass as string;
     const user:Partial<TUser> = {}
 
-    user.id = "2030102030"
+    user.id = "2030102031"
     user.password=password;
     user.role="student";
 

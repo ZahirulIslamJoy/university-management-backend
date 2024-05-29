@@ -83,6 +83,7 @@ const studentSchema = new Schema<Student, StudentModels>(
     gender: {
       type: String,
       enum: ['male', 'female'],
+      required:true,
     },
     dateOfBirth: { type: String },
     email: { type: String, required: true },
