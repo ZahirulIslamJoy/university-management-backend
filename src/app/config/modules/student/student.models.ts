@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
 import {
   Guardian,
   LocalGuardian,
@@ -7,7 +6,6 @@ import {
   StudentModels,
   UserName,
 } from './student.interface';
-import config from '../..';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -72,7 +70,6 @@ const localGuradianSchema = new Schema<LocalGuardian>({
 const studentSchema = new Schema<Student, StudentModels>(
   {
     id: { type: String, required: [true, 'Id is required'], unique: true },
-    password: { type: String },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User id is required'],
@@ -131,18 +128,7 @@ studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName}  ${this.name.middleName}  ${this.name.lastName} `;
 });
 
-studentSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(user.password, Number(config.salt));
-  next();
-});
 
-studentSchema.post('save', function (doc, next) {
-  console.log(doc);
-  doc.password = '';
-  next();
-});
 
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
