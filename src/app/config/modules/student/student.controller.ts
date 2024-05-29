@@ -1,33 +1,7 @@
 import { Request, Response } from 'express';
-import { StudentServices } from './student.service';
-import studentValidationSchema from './student.validation';
+import { StudentServices } from './student.service'
 
-const createStudent = async (req: Request, res: Response) => {
-  try {
-    const {student:studentData} = req.body;
 
-   const {error} =studentValidationSchema.validate(studentData);
-
-   if(error){
-    res.status(500).json({
-        success:false,
-        message:"Something Went wrong",
-        error:error.details
-    })
-   }
-
-    //now call the service function
-    const result = await StudentServices.createStudentIntoDb(studentData);
-
-    res.status(200).json({
-      success: true,
-      message: 'Student Created Successfully',
-      data: result,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 const getAllStudents=async(req:Request,res:Response)=>{
    try{
@@ -90,5 +64,5 @@ const getSingleStudents=async(req:Request,res:Response)=>{
 
 
 export const StudentControllers={
-    createStudent,getAllStudents,getSingleStudents,deleteStudents
+    getAllStudents,getSingleStudents,deleteStudents
 }

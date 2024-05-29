@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from "bcrypt"
+import bcrypt from 'bcrypt';
 import {
   Guardian,
   LocalGuardian,
@@ -53,7 +53,7 @@ const guardianSchema = new Schema<Guardian>({
 const localGuradianSchema = new Schema<LocalGuardian>({
   name: {
     type: String,
-    required: [true,"Name is required vai"],
+    required: [true, 'Name is required vai'],
   },
   occupation: {
     type: String,
@@ -69,102 +69,102 @@ const localGuradianSchema = new Schema<LocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<Student,StudentModels>({
-  id: { type: String , required:true , unique:true },
-  password: { type: String},
-  name: {
-    type:userNameSchema,
-    required:true,
+const studentSchema = new Schema<Student, StudentModels>(
+  {
+    id: { type: String, required: [true, 'Id is required'], unique: true },
+    password: { type: String },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User id is required'],
+      unique: true,
+      ref: 'User',
+    },
+    name: {
+      type: userNameSchema,
+      required: true,
+    },
+    gender: {
+      type: String,
+      enum: ['male', 'female'],
+    },
+    dateOfBirth: { type: String },
+    email: { type: String, required: true },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    bloogGroup: {
+      type: String,
+      enum: {
+        values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        message: '{VALUE} is not supported',
+      },
+    },
+    presentAddress: { type: String, required: true },
+    permanentAddres: { type: String, required: true },
+    guardian: {
+      type: guardianSchema,
+      required: true,
+    },
+    localGuardian: {
+      type: localGuradianSchema,
+      required: true,
+    },
+    profileImg: { type: String },
+    isActive: {
+      type: String,
+      enum: ['active', 'blocked'],
+      default: 'active',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  gender: {
-    type:String,
-    enum:['male', 'female']
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  dateOfBirth: { type: String },
-  email: { type: String, required: true },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  bloogGroup:{
-    type:String,
-    enum: {
-      values:['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-      message:"{VALUE} is not supported"
-    }
-  },
-  presentAddress: { type: String, required: true },
-  permanentAddres: { type: String, required: true },
-  guardian: {
-    type:guardianSchema,
-    required:true
-  },
-  localGuardian: {
-    type:localGuradianSchema,
-    required:true
-  },
-  profileImg: { type: String },
-  isActive: {
-    type:String,
-    enum:['active', 'blocked'],
-    default:"active"
-  },
-  isDeleted:{
-    type:Boolean,
-    default:false
-  }
-}, {
-  toJSON:{
-    virtuals:true
-  }
+);
+
+//virtual
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName}  ${this.name.middleName}  ${this.name.lastName} `;
 });
 
-
-//virtual 
-studentSchema.virtual("fullName").get(function (){
- return `${this.name.firstName}  ${this.name.middleName}  ${this.name.lastName} ` })
-
-
-
-studentSchema.pre("save",async function (next){
+studentSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
-  user.password=await bcrypt.hash(user.password,Number(config.salt));
-next();
-})
-
-studentSchema.post("save",function (doc,next){
-  console.log(doc)
-  doc.password="";
+  user.password = await bcrypt.hash(user.password, Number(config.salt));
   next();
-})
+});
 
-studentSchema.pre("find", function(next){
-  this.find({isDeleted : {$ne:true}})
-  next()
-})
+studentSchema.post('save', function (doc, next) {
+  console.log(doc);
+  doc.password = '';
+  next();
+});
 
-studentSchema.pre("findOne", function(next){
-  this.find({isDeleted : {$ne:true}})
-  next()
-})
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
+studentSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
-studentSchema.pre("aggregate", function(next){
-  this.pipeline().unshift({$match:{isDeleted:{$ne:true}}})
-  next()
-})
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 
-
-
-
-
-
-
-
-
-
-studentSchema.statics.isExists=async function(id:string){
-  const existingUser= await StudentModel.findOne({id});
+studentSchema.statics.isExists = async function (id: string) {
+  const existingUser = await StudentModel.findOne({ id });
   return existingUser;
-}
+};
 
-export const StudentModel = model<Student,StudentModels>('Student', studentSchema);
+export const StudentModel = model<Student, StudentModels>(
+  'Student',
+  studentSchema,
+);
