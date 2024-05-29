@@ -3,6 +3,7 @@ import cors from 'cors';
 import { StudentRoutes } from './app/config/modules/student/student.route';
 import { UserRouters } from './app/config/modules/user/user.route';
 import handleError from './app/middleware/globalErrorHandling';
+import notFound from './app/middleware/notFound';
 
 const app = express();
 //const port = 3000
@@ -20,5 +21,7 @@ app.use("/api/v1/users",UserRouters)
 
 
 app.use(handleError);
+
+app.use(notFound);
 
 export default app;
