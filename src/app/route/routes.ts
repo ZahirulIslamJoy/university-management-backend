@@ -1,6 +1,6 @@
 import express from 'express';
-import { StudentRoutes } from '../config/modules/student/student.route';
-import { UserRouters } from '../config/modules/user/user.route';
+import { StudentRoutes } from '../../modules/student/student.route';
+import { UserRouters } from '../../modules/user/user.route';
 
 const router = express.Router();
 
