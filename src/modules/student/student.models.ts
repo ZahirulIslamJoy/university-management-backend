@@ -51,7 +51,7 @@ const guardianSchema = new Schema<Guardian>({
 const localGuradianSchema = new Schema<LocalGuardian>({
   name: {
     type: String,
-    required: [true, 'Name is required vai'],
+    required: [true, 'Name is required'],
   },
   occupation: {
     type: String,
@@ -96,8 +96,8 @@ const studentSchema = new Schema<Student, StudentModels>(
         message: '{VALUE} is not supported',
       },
     },
-    presentAddress: { type: String, required: true },
-    permanentAddres: { type: String, required: true },
+    presentAddress: { type: String },
+    permanentAddres: { type: String },
     guardian: {
       type: guardianSchema,
       required: true,
