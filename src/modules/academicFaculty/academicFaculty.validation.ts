@@ -4,7 +4,7 @@ const academicFacultyValidationSchema = z.object({
   body:z.object({
     name: z
     .string({
-      invalid_type_error: 'Name must be string',
+      invalid_type_error: 'Faculty Name must be string',
     })
   })
 });

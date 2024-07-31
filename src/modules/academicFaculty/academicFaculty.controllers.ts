@@ -4,7 +4,7 @@ import catchAsync from '../../app/utils/catchAsync';
 import { AcademicFacultyServices } from './academicFaculty.service';
 
 const createAcademicFaculty = catchAsync(async (req,res) => {
-    const {data} = req.body;
+    const data = req.body;
     const result = await AcademicFacultyServices.createAcadecFacultyIntoDb(data);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -18,7 +18,7 @@ const getAllAcademicFaculty = catchAsync(async (req, res) => {
     const result = await AcademicFacultyServices.getAllAcademicFacultyFromDB();
     res.status(200).json({
       success: true,
-      message: 'Students are retrive Successfully',
+      message: 'Academic Faculties are retrive Successfully',
       data: result,
     });
   });
@@ -29,7 +29,7 @@ const getAllAcademicFaculty = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Students are retrive Successfully',
+      message: 'Academic Faculty is  retrive Successfully',
       data: result,
     });
   });

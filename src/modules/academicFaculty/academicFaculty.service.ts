@@ -13,10 +13,10 @@ const getAllAcademicFacultyFromDB=async()=>{
 }
 
 const getSingleFacultyFromDB=async(id:string)=>{
-    //const result=await StudentModel.findOne({id:id});
-    const result=await AcademicFaculty.aggregate([
-        {$match:{id:id}}
-    ])
+    const result=await AcademicFaculty.findOne({id:id});
+    // const result=await AcademicFaculty.aggregate([
+    //     {$match:{id:id}}
+    // ])
     return result;
 }
 
