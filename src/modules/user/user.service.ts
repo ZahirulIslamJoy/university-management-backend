@@ -20,6 +20,7 @@ const createStudentIntoDb = async (password: string, student: Student) => {
   const session=await mongoose.startSession();
 
   try{
+    session.startTransaction();
     if(admissionSemester){
       user.id = await generateStudentId(admissionSemester)
     }
