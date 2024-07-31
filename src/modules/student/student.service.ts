@@ -1,8 +1,4 @@
 import { StudentModel } from './student.models';
-
-
-
-
 const getAllStudentsFromDB=async()=>{
     const result=await StudentModel.find().populate("admissionSemester").populate({
         path:"academicDepartment",

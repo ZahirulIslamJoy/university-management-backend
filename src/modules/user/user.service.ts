@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import config from '../../app/config';
 import { AcademicSemester } from '../academicSemester/acadenicSemester.model';
 import { Student } from '../student/student.interface';
@@ -5,6 +6,8 @@ import { StudentModel } from '../student/student.models';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateStudentId } from './user.utils';
+import AppError from '../../app/errors/AppError';
+import httpStatus from 'http-status';
 
 const createStudentIntoDb = async (password: string, student: Student) => {
   password = password || (config.pass as string);
@@ -13,19 +16,37 @@ const createStudentIntoDb = async (password: string, student: Student) => {
 
   //find academic semester info
   const admissionSemester= await AcademicSemester.findById(student.admissionSemester);
-  if(admissionSemester){
-    user.id = await generateStudentId(admissionSemester)
+
+  const session=await mongoose.startSession();
+
+  try{
+    if(admissionSemester){
+      user.id = await generateStudentId(admissionSemester)
+    }
+    user.password = password;
+    user.role = 'student';
+
+    //transaction-1
+    const newUser = await User.create([user],{session});
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST,"Failed to Create User")
+    }
+      student.id = newUser[0].id;
+      student.user = newUser[0]._id; // referencing
+      //transaction-2
+      const result = await StudentModel.create([student],{session});
+      if(!result){
+        throw new AppError(httpStatus.BAD_REQUEST,"Failed to Create Student")
+      }
+         await session.commitTransaction();
+         await session.endSession();
+      return result;
+  }catch(err){
+    await session.abortTransaction();
+    await session.endSession();
   }
-  user.password = password;
-  user.role = 'student';
-  const newUser = await User.create(user);
-  if (Object.keys(newUser).length) {
-    student.id = newUser.id;
-    student.user = newUser._id; // referencing
-    const result = await StudentModel.create(student);
-    return result;
-  }
-};
+
+}
 
 export const UserServices = {
   createStudentIntoDb,
