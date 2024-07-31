@@ -9,5 +9,6 @@ const router = express.Router();
 router.post("/create-academic-department", validateRequest(AcademicDepartmentValidation.academicDepartmentValidationSchema),AcademicDepartmentControllers.createAcademicFaculty)
 router.get("/",AcademicDepartmentControllers.getAllAcademicFaculty)
 router.get("/:departmentId",AcademicDepartmentControllers.getSingleAcademicFaculty)
+router.patch("/:departmentId",validateRequest(AcademicDepartmentValidation.updateAcademicDepartmentValidationSchema),AcademicDepartmentControllers.updateAcademicDepartment)
 
 export const AcademicDepartmentRouters = router;

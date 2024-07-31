@@ -24,7 +24,7 @@ const getAllAcademicFaculty = catchAsync(async (req, res) => {
   });
   
   const getSingleAcademicFaculty = catchAsync(async (req, res) => {
-    const departmentId = req.params.id;
+    const departmentId = req.params.departmentId;
     const result = await AcademicDepartmentServices.getSingleDepartmentFromDB(departmentId);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -34,6 +34,22 @@ const getAllAcademicFaculty = catchAsync(async (req, res) => {
     });
   });
 
+  const updateAcademicDepartment = catchAsync(async (req, res) => {
+    const departmentId = req.params.departmentId;
+    const data = req.body;
+    console.log(departmentId,data)
+    const result = await AcademicDepartmentServices.updateAcademicDepartmentIntoDB(departmentId,data)
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Department  is update Successfully',
+      data: result,
+    });
+  });
+
+
+
+
 export const AcademicDepartmentControllers = {
-    createAcademicFaculty,getAllAcademicFaculty,getSingleAcademicFaculty,
+    createAcademicFaculty,getAllAcademicFaculty,getSingleAcademicFaculty,updateAcademicDepartment
 };
