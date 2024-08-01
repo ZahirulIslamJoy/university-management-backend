@@ -1,7 +1,9 @@
 import { ErrorRequestHandler } from 'express';
-import { ZodError, ZodIssue } from 'zod';
+import { ZodError } from 'zod';
 import { TErrorSources } from '../interfaces/error';
 import config from '../config';
+import { handleZodError } from '../errors/handleZodError';
+import { handleValidationError } from '../errors/handleValidationError';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const handleError: ErrorRequestHandler = (err, req, res, next) => {
@@ -16,26 +18,18 @@ const handleError: ErrorRequestHandler = (err, req, res, next) => {
     },
   ];
 
-  const handleZodError = (err: ZodError) => {
-    statusCode = 400;
-    const errorSources :TErrorSources = err.issues.map((issue:ZodIssue) => {
-      return {
-        path:issue?.path[issue?.path.length-1],
-        message:issue.message
-      };
-    });
-    return {
-      statusCode,
-      message: 'Validation Error',
-      errorSources,
-    };
-  };
 
   if (err instanceof ZodError) {
     const simplifiedError= handleZodError(err);
-    message=simplifiedError.message;
-    statusCode=simplifiedError.statusCode;
-    errorSources=simplifiedError.errorSources
+    message=simplifiedError?.message;
+    statusCode=simplifiedError?.statusCode;
+    errorSources=simplifiedError?.errorSources
+  }
+  else if (err?.name==="ValidationError"){
+    const simplifiedError= handleValidationError(err);
+    message=simplifiedError?.message;
+    statusCode=simplifiedError?.statusCode;
+    errorSources=simplifiedError?.errorSources
   }
 
   return res.status(statusCode).json({
