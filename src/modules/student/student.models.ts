@@ -122,6 +122,7 @@ const studentSchema = new Schema<Student, StudentModels>(
     toJSON: {
       virtuals: true,
     },
+    timestamps:true
   },
 );
 
