@@ -42,10 +42,31 @@ const deleteCourseFromDB = async (id: string) => {
 };
 
 
+const updateCourseIntoDB = async (id:string,payload: TCourse) => {
+    const {preRequisiteCourses,...remaingCourseData}=payload;
+
+    //check if any preRequisit course to delete
+    if(preRequisiteCourses && preRequisiteCourses.length>0){
+        const deletePrerequisit= preRequisiteCourses.filter(elem => elem.course && elem.isDeleted).map(elem=>elem.course)
+        const deletePrerequisitCoure=await Course.findByIdAndUpdate(
+            id,
+            {
+                $pull:{preRequisiteCourses:{course : {$in: deletePrerequisit} }}
+            }
+        )
+    }
+
+  
+    const result = await Course.findByIdAndUpdate(id,remaingCourseData,{new:true})
+    return result;
+  };
+
+
 
 export const CourseServices = {
   createCourseIntoDB,
   getAllCoursesFromDB,
   getSingleCourseFromDB,
   deleteCourseFromDB,
+  updateCourseIntoDB
 }
