@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import { Student } from './student.interface';
 import QueryBuilder from '../../bulilder/QueryBuilder';
-import { excludeFields, studentSearchableFields } from './student.constants';
+import { studentSearchableFields } from './student.constants';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   // const queryObj = { ...query };
@@ -71,7 +71,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
       populate: {
         path: 'academicFaculty',
       },
-    }),query).search(studentSearchableFields).filter(excludeFields).sort().paginate().fields()
+    }),query).search(studentSearchableFields).filter().sort().paginate().fields()
   const result = studentQuery.modelQuery
   return result
 
