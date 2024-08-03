@@ -60,9 +60,41 @@ const getAllSemesterRegistrationsFromDB = async (
   
   const getSingleSemesterRegistrationsFromDB = async (id: string) => {
     const result = await SemesterRegistration.findById(id);
-  
     return result;
   };
+
+  const updateSemesterRegistrationsIntoDB = async (id: string , payload : Partial<TSemesterRegistration>) => {
+    //check if the Id is valid or not
+
+    const isSemesterRegisterExists= await getSingleSemesterRegistrationsFromDB(id);
+    if(!isSemesterRegisterExists){
+        throw new AppError(httpStatus.NOT_FOUND,"Invalid Id")
+    }
+
+    //console.log(isSemesterRegisterExists)
+
+    const currentStatus=payload?.status;
+
+
+    //handle Ended Case
+    if(isSemesterRegisterExists?.status === semesterRegistrationStatuss.ENDED){
+        throw new AppError(httpStatus.BAD_REQUEST,"This Semester is already ended")
+    }
+
+    if(isSemesterRegisterExists?.status === semesterRegistrationStatuss.UPCOMING && currentStatus === semesterRegistrationStatuss.ENDED){
+        throw new AppError(httpStatus.BAD_REQUEST,`Semester Registration Cannot update from ${isSemesterRegisterExists?.status} to ${currentStatus}`)
+    }
+
+    if(isSemesterRegisterExists?.status === semesterRegistrationStatuss.ONGOING && currentStatus === semesterRegistrationStatuss.UPCOMING){
+        throw new AppError(httpStatus.BAD_REQUEST,`Semester Registration Cannot update from ${isSemesterRegisterExists?.status} to ${currentStatus}`)
+    }
+
+    const result = await SemesterRegistration.findByIdAndUpdate(id , payload , {
+        new:true,
+        runValidators:true
+    })
+    return result;
+  }
 
 
 
@@ -70,5 +102,5 @@ const getAllSemesterRegistrationsFromDB = async (
 
 
 export const SemesterRegistrationServices={
-    createSemesterRegistrationIntoDB,getAllSemesterRegistrationsFromDB,getSingleSemesterRegistrationsFromDB
+    createSemesterRegistrationIntoDB,getAllSemesterRegistrationsFromDB,getSingleSemesterRegistrationsFromDB,updateSemesterRegistrationsIntoDB
 }

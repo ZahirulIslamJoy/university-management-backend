@@ -18,6 +18,11 @@ router.get(
     SemesterRegistrationControllers.getSingleSemesterRegistration,
   );
 
+  router.patch(
+    '/:id',
+    SemesterRegistrationControllers.updateSemesterRegistration,
+  );
+
 // router.delete('/:id', FacultyControllers.deleteFaculty);
 
 // router.get('/', FacultyControllers.getAllFaculties);
