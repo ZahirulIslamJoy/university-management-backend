@@ -4,6 +4,7 @@ import { AcademicSemester } from "../academicSemester/acadenicSemester.model";
 import { TSemesterRegistration } from "./semesterRegistration.interface"
 import { SemesterRegistration } from "./semesterRegistration.model";
 import QueryBuilder from "../../bulilder/QueryBuilder";
+import { semesterRegistrationStatuss } from "./semesterRegistration.constant";
 
 const createSemesterRegistrationIntoDB=async(payload:TSemesterRegistration)=>{
 
@@ -20,6 +21,18 @@ const createSemesterRegistrationIntoDB=async(payload:TSemesterRegistration)=>{
     const isExist=await SemesterRegistration.findOne({academicSemester})
     if(isExist){
         throw new AppError(httpStatus.CONFLICT,"This Semester is already registered")
+    }
+
+    //check is there any semester Registration is upcoming or ongoing
+    const checkUpcomingOrOngoing= await SemesterRegistration.findOne({
+        $or : [
+            {status:semesterRegistrationStatuss.UPCOMING},
+            {status:semesterRegistrationStatuss.ONGOING}
+        ]
+    })
+
+    if(checkUpcomingOrOngoing){
+        throw new AppError(httpStatus.BAD_REQUEST,`There is already a ${checkUpcomingOrOngoing?.status} semester`)
     }
 
 
