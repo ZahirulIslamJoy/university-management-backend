@@ -5,12 +5,18 @@ import { SemesterRegistrationControllers } from './semesterRegistration.controll
 
 const router = express.Router();
 
-// router.get('/:id', FacultyControllers.getSingleFaculty);
 
 router.post(
   '/create-semester-registration',validateRequest(semesterValidation.createSemesterValidationSchema),
   SemesterRegistrationControllers.createSemesterRegistration,
 );
+
+router.get('/', SemesterRegistrationControllers.getAllSemesterRegistrations);
+
+router.get(
+    '/:id',
+    SemesterRegistrationControllers.getSingleSemesterRegistration,
+  );
 
 // router.delete('/:id', FacultyControllers.deleteFaculty);
 

@@ -3,10 +3,13 @@ import AppError from "../../app/errors/AppError";
 import { AcademicSemester } from "../academicSemester/acadenicSemester.model";
 import { TSemesterRegistration } from "./semesterRegistration.interface"
 import { SemesterRegistration } from "./semesterRegistration.model";
+import QueryBuilder from "../../bulilder/QueryBuilder";
 
 const createSemesterRegistrationIntoDB=async(payload:TSemesterRegistration)=>{
 
     const academicSemester=payload?.academicSemester;
+
+
     //check if the academic semester is valid or not
     const isValid= await AcademicSemester.findById(academicSemester);
     if(!isValid){
@@ -23,8 +26,30 @@ const createSemesterRegistrationIntoDB=async(payload:TSemesterRegistration)=>{
     const result = await SemesterRegistration.create(payload);
     return result;
 
-
 }
+
+
+const getAllSemesterRegistrationsFromDB = async (
+    query: Record<string, unknown>,
+  ) => {
+    const semesterRegistrationQuery = new QueryBuilder(
+      SemesterRegistration.find().populate('academicSemester'),
+      query,
+    )
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+  
+    const result = await semesterRegistrationQuery.modelQuery;
+    return result;
+  };
+  
+  const getSingleSemesterRegistrationsFromDB = async (id: string) => {
+    const result = await SemesterRegistration.findById(id);
+  
+    return result;
+  };
 
 
 
@@ -32,5 +57,5 @@ const createSemesterRegistrationIntoDB=async(payload:TSemesterRegistration)=>{
 
 
 export const SemesterRegistrationServices={
-    createSemesterRegistrationIntoDB
+    createSemesterRegistrationIntoDB,getAllSemesterRegistrationsFromDB,getSingleSemesterRegistrationsFromDB
 }

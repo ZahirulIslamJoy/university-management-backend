@@ -4,7 +4,10 @@ import sendResponse from '../../app/utils/sendResponse';
 import { SemesterRegistrationServices } from './semesterRegistration.service';
 
 const createSemesterRegistration = catchAsync(async (req, res) => {
-  const result = await SemesterRegistrationServices.createSemesterRegistrationIntoDB( req.body);
+  const result =
+    await SemesterRegistrationServices.createSemesterRegistrationIntoDB(
+      req.body,
+    );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -14,42 +17,41 @@ const createSemesterRegistration = catchAsync(async (req, res) => {
   });
 });
 
-// const getAllFaculties = catchAsync(async (req, res) => {
-//   const result = await FacultyServices.getAllFacultiesFromDB(req.query);
+const getAllSemesterRegistrations = catchAsync(
+  async (req, res) => {
+    const result = await SemesterRegistrationServices.getAllSemesterRegistrationsFromDB(
+        req.query,
+      );
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Faculties are retrieved succesfully',
-//     data: result,
-//   });
-// });
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Semester Registration is retrieved successfully !',
+      data: result,
+    });
+  },
+);
 
-// const updateFaculty = catchAsync(async (req, res) => {
-//   const { id } = req.params;
-//   const { faculty } = req.body;
-//   const result = await FacultyServices.updateFacultyIntoDB( id , faculty);
+const getSingleSemesterRegistration = catchAsync(
+  async (req, res) => {
+    const { id } = req.params;
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Faculty is updated succesfully',
-//     data: result,
-//   });
-// });
+    const result =
+      await SemesterRegistrationServices.getSingleSemesterRegistrationsFromDB(
+        id,
+      );
 
-// const deleteFaculty = catchAsync(async (req, res) => {
-//   const {  id } = req.params;
-//   const result = await FacultyServices.deleteFacultyFromDB(id);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Faculty is deleted succesfully',
-//     data: result,
-//   });
-// });
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Semester Registration is retrieved successfully',
+      data: result,
+    });
+  },
+);
 
 export const SemesterRegistrationControllers = {
-    createSemesterRegistration
+  createSemesterRegistration,
+  getAllSemesterRegistrations,
+  getSingleSemesterRegistration,
 };
