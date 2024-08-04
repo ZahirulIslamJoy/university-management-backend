@@ -9,7 +9,7 @@ const createOfferedCourse = catchAsync(async (req,res) => {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Student is created Successfully',
+      message: 'Offered Course is created Successfully',
       data: result,
     });
 })
