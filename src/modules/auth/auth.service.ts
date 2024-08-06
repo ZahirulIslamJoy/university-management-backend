@@ -38,6 +38,8 @@ const loginUser = async (payload: TLoginUser) => {
         role : user?.role
     }
 
+    //console.log()
+
     const accessToken = jwt.sign({
         data: tokenData
       }, config.acessToken as string, { expiresIn: '10d' });
