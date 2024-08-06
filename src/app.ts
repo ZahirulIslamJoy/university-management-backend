@@ -3,8 +3,10 @@ import cors from 'cors';
 import handleError from './app/middleware/globalErrorHandling';
 import notFound from './app/middleware/notFound';
 import router from './app/route/routes';
+import cookieParser from 'cookie-parser';
 
 const app = express();
+app.use(cookieParser())
 //const port = 3000
 
 //
