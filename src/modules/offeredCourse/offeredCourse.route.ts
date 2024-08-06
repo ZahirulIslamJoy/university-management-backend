@@ -11,17 +11,16 @@ router.post(
   OfferedCourseControllers.createOfferedCourse,
 );
 
-// router.get('/', SemesterRegistrationControllers.getAllSemesterRegistrations);
-
-// router.get(
-//     '/:id',
-//     SemesterRegistrationControllers.getSingleSemesterRegistration,
-//   );
-
-//   router.patch(
-//     '/:id',
-//     SemesterRegistrationControllers.updateSemesterRegistration,
-//   );
+router.patch(
+    '/:id',
+    validateRequest(OfferedCourseValidations.updateOfferedCourseValidationSchema),
+    OfferedCourseControllers.updateOfferedCourse,
+  );
+  
+  router.delete(
+    '/:id',
+    OfferedCourseControllers.deleteOfferedCourseFromDB,
+  );
 
 
 export const OfferedCourseRoutes = router;

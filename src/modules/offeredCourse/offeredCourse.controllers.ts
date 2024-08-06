@@ -14,9 +14,37 @@ const createOfferedCourse = catchAsync(async (req,res) => {
     });
 })
 
+const updateOfferedCourse = catchAsync(async (req, res) => {
+    const { id } = req.params;
+  
+    const result = await offeredCourseServices.updateOfferedCourseIntoDB(
+      id,
+      req.body,
+    );
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'OfferedCourse updated successfully',
+      data: result,
+    });
+  });
+  
+  const deleteOfferedCourseFromDB = catchAsync(
+    async (req ,res) => {
+      const { id } = req.params;
+      const result = await offeredCourseServices.deleteOfferedCourseFromDB(id);
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'OfferedCourse deleted successfully',
+        data: result,
+      });
+    },
+  );
+
 
 
 
 export const OfferedCourseControllers = {
-    createOfferedCourse
+    createOfferedCourse, updateOfferedCourse , deleteOfferedCourseFromDB
 };
