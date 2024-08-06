@@ -1,4 +1,7 @@
-export type TLoginUser = {
+export interface TLoginUser  {
     id: string;
     password: string;
-  };
+};
+
+
+ 

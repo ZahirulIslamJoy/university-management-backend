@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
-import { TUser } from './user.interface';
+import { TUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../app/config';
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser , UserModel>(
   {
     id: {
       type: String,
@@ -36,6 +36,17 @@ const userSchema = new Schema<TUser>(
   },
 );
 
+userSchema.statics.isUserExistsByCustomId = async function(id: string){
+  return await User.findOne({id})
+}
+
+userSchema.statics.isPasswordMatched = async function (userPassword : string , hashPassWord: string) {
+   const isCorrect = await bcrypt.compare(userPassword , hashPassWord)
+   return isCorrect
+}
+
+
+
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
@@ -49,4 +60,4 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = model<TUser>('User', userSchema);
+export const User = model<TUser, UserModel>('User', userSchema);
