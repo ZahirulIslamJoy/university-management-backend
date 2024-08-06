@@ -15,6 +15,7 @@ const createAcademicFaculty = catchAsync(async (req,res) => {
 })
 
 const getAllAcademicFaculty = catchAsync(async (req, res) => {
+  //console.log(req.user)
     const result = await AcademicFacultyServices.getAllAcademicFacultyFromDB();
     res.status(200).json({
       success: true,
