@@ -25,4 +25,10 @@ router.post(
     UserControllers.createAdmin,
   );
 
+  router.get(
+    '/me',
+    auth(USER_ROLE.admin , USER_ROLE.student , USER_ROLE.faculty),
+    UserControllers.getMe,
+  );
+
 export const UserRouters = router;
