@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import config from '../../app/config';
 import { AcademicSemester } from '../academicSemester/acadenicSemester.model';
@@ -14,7 +15,7 @@ import { Faculty } from '../faculty/faculty.model';
 import { Admin } from '../admin/admin.model';
 import { sendImageToCloudinary } from '../../app/utils/sendImageToCloudinary';
 
-const createStudentIntoDb = async (password: string, student: Student) => {
+const createStudentIntoDb = async (file : any ,password: string, student: Student) => {
   password = password || (config.defaultPass as string);
   const user: Partial<TUser> = {};
 
@@ -33,8 +34,9 @@ const createStudentIntoDb = async (password: string, student: Student) => {
     user.role = 'student';
     user.email = student.email;
 
-    sendImageToCloudinary();
-
+    const imageName = `${user.id}${student?.name?.firstName}`;
+    const path = file?.path;
+    const {secure_url}=await sendImageToCloudinary(imageName , path);
     //transaction-1
     const newUser = await User.create([user],{session});
     if (!newUser.length) {
@@ -42,8 +44,10 @@ const createStudentIntoDb = async (password: string, student: Student) => {
     }
       student.id = newUser[0].id;
       student.user = newUser[0]._id; // referencing
+      student.profileImg = secure_url;
       //transaction-2
       const result = await StudentModel.create([student],{session});
+      console.log(result)
       if(!result){
         throw new AppError(httpStatus.BAD_REQUEST,"Failed to Create Student")
       }
