@@ -10,5 +10,6 @@ export default {
   salt:process.env.SALT_ROUNDS,
   defaultPass:process.env.DEFAULT_PASS ,
   acessToken: process.env.AUTH_ACCESS_TOKEN_SECRET,
-  reset_pass_ui_link:process.env.RESET_PASS_UI
+  reset_pass_ui_link:process.env.RESET_PASS_UI,
+  cloudinary_key:process.env.CLOUDINARY_API_KEY,
 };

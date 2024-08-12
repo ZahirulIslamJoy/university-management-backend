@@ -12,6 +12,7 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { academicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Faculty } from '../faculty/faculty.model';
 import { Admin } from '../admin/admin.model';
+import { sendImageToCloudinary } from '../../app/utils/sendImageToCloudinary';
 
 const createStudentIntoDb = async (password: string, student: Student) => {
   password = password || (config.defaultPass as string);
@@ -31,6 +32,8 @@ const createStudentIntoDb = async (password: string, student: Student) => {
     user.password = password;
     user.role = 'student';
     user.email = student.email;
+
+    sendImageToCloudinary();
 
     //transaction-1
     const newUser = await User.create([user],{session});
