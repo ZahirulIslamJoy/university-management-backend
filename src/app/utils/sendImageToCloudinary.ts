@@ -1,6 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
+import AppError from '../errors/AppError';
+import httpStatus from 'http-status';
 import fs from 'fs';
 
 cloudinary.config({
@@ -17,15 +19,13 @@ export const sendImageToCloudinary = async (fileName: string, path: string) => {
     })
     fs.unlink(path, (err) => {
         if (err) {
-          console.log(err);
-        } else {
-          console.log('File is deleted.');
+          throw new AppError(httpStatus.BAD_REQUEST , "Unable to delete image")
         }
       });
     return uploadResult
  }
  catch(err){
-    console.log(err)
+    throw new AppError(httpStatus.BAD_REQUEST,"Image Upload Faild")
  }
 };
 
