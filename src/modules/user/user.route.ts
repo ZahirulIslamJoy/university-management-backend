@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import express, { NextFunction } from 'express';
 import { UserControllers } from './user.controllers';
 import validateRequest from '../../app/middleware/validateRequest';

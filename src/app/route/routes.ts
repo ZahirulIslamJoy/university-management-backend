@@ -10,6 +10,7 @@ import { CourseRoutes } from '../../modules/course/course.route';
 import { SemesterRegistrationRoutes } from '../../modules/semesterRegistration/semesterRegistration.route';
 import { OfferedCourseRoutes } from '../../modules/offeredCourse/offeredCourse.route';
 import { AuthRoutes } from '../../modules/auth/auth.route';
+import { EnrolledCourseRoutes } from '../../modules/enrolledCourse/enrolledCourse.route';
 
 const router = express.Router();
 
@@ -57,7 +58,13 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoutes
-  }
+  },
+  {
+    path: '/enrolled-course',
+    route: EnrolledCourseRoutes
+  }, 
+  
+
   
 ];
 
