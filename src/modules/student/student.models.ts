@@ -106,14 +106,18 @@ const studentSchema = new Schema<Student, StudentModels>(
       type: localGuradianSchema,
       required: true,
     },
-    profileImg: { type: String },
+    profileImg: { type: String , default:"" },
     admissionSemester:{
-      type:Schema.Types.ObjectId
-      //ref
+      type:Schema.Types.ObjectId,
+      ref: 'AcademicSemester',
     },
-    academicDepartment:{
-      type:Schema.Types.ObjectId
-      //ref
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty',
     },
     isDeleted: {
       type: Boolean,

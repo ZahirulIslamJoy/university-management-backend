@@ -6,7 +6,11 @@ import { Student } from '../student/student.interface';
 import { StudentModel } from '../student/student.models';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import { generateAdminId, generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 import AppError from '../../app/errors/AppError';
 import httpStatus from 'http-status';
 import { TFaculty } from '../faculty/faculty.interface';
@@ -40,6 +44,15 @@ const createStudentIntoDB = async (
     throw new AppError(400, 'Admission semester not found');
   }
 
+  const AcademicDepartment = await academicDepartment.findById(
+    payload.academicDepartment,
+  );
+
+  if (!AcademicDepartment) {
+    throw new AppError(400, 'Aademic department not found');
+  }
+  payload.academicFaculty = AcademicDepartment.academicFaculty;
+
   const session = await mongoose.startSession();
 
   try {
@@ -47,10 +60,13 @@ const createStudentIntoDB = async (
     //set  generated id
     userData.id = await generateStudentId(admissionSemester);
 
-    const imageName = `${userData.id}${payload?.name?.firstName}`;
-    const path = file?.path;
-    //send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(imageName, path);
+    if (file) {
+      const imageName = `${userData.id}${payload?.name?.firstName}`;
+      const path = file?.path;
+      //send image to cloudinary
+      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      payload.profileImg = secure_url;
+    }
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array
@@ -62,7 +78,6 @@ const createStudentIntoDB = async (
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImg = secure_url;
 
     // create a student (transaction-2)
 
@@ -82,7 +97,6 @@ const createStudentIntoDB = async (
     throw new Error(err);
   }
 };
-
 
 const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   // create a user object
@@ -135,7 +149,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     await session.endSession();
 
     return newFaculty;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -163,7 +177,7 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     userData.id = await generateAdminId();
 
     // create a user (transaction-1)
-    const newUser = await User.create([userData], { session }); 
+    const newUser = await User.create([userData], { session });
 
     //create a admin
     if (!newUser.length) {
@@ -184,7 +198,7 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     await session.endSession();
 
     return newAdmin;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -208,8 +222,9 @@ const getMe = async (userId: string, role: string) => {
   return result;
 };
 
-
-
 export const UserServices = {
-  createStudentIntoDB,createFacultyIntoDB,createAdminIntoDB , getMe
+  createStudentIntoDB,
+  createFacultyIntoDB,
+  createAdminIntoDB,
+  getMe,
 };
