@@ -12,4 +12,5 @@ export default {
   acessToken: process.env.AUTH_ACCESS_TOKEN_SECRET,
   reset_pass_ui_link:process.env.RESET_PASS_UI,
   cloudinary_key:process.env.CLOUDINARY_API_KEY,
+  super_pass:process.env.SUPER_ADMIN_PASS,
 };
