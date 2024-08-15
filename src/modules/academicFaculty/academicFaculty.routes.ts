@@ -8,7 +8,7 @@ import { USER_ROLE } from "../user/user.constant";
 const router = express.Router();
 
 
-router.post("/create-academic-faculty", validateRequest(AcademicFacultyValidation.academicFacultyValidationSchema),AcademicFacultyControllers.createAcademicFaculty)
+router.post("/create-academic-faculty",auth(USER_ROLE.superAdmin , USER_ROLE.admin), validateRequest(AcademicFacultyValidation.academicFacultyValidationSchema),AcademicFacultyControllers.createAcademicFaculty)
 router.get("/",auth(USER_ROLE.admin),AcademicFacultyControllers.getAllAcademicFaculty)
 router.get("/:facultyId",AcademicFacultyControllers.getSingleAcademicFaculty)
 

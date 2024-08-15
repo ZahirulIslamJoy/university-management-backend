@@ -1,7 +1,14 @@
+import httpStatus from "http-status";
+import AppError from "../../app/errors/AppError";
+import { AcademicFaculty } from "../academicFaculty/academicFaculty.model";
 import { TAcademicDepartment } from "./academicDepartment.interface";
 import { academicDepartment } from "./academicDepartment.model";
 
 const createAcadecDepartmentIntoDb = async (payload : TAcademicDepartment) => {
+  const isFacultyExists = await AcademicFaculty.findById(payload.academicFaculty)
+  if(!isFacultyExists){
+    throw new AppError(httpStatus.BAD_REQUEST,"This Academic Faculty isnt exists")
+  }
   const newDepartment = await academicDepartment.create(payload);
   return newDepartment
 
