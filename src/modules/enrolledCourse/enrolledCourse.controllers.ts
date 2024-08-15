@@ -14,8 +14,23 @@ const result = await EnrolledCourseServices.createEnrolledCourseIntoDB(userId , 
   });
 });
 
+const updateEnrolledCourseMarks = catchAsync(async (req, res) => {
+  const facultyId = req.user.userId;
+  const result = await EnrolledCourseServices.updateEnrolledCourseMarksIntoDB(
+    facultyId,
+    req.body,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Marks is updated succesfully',
+    data: result,
+  });
+});
+
 
 
 export const EnrolledCourseControllers = {
-  createEnrolledCourse,
+  createEnrolledCourse,updateEnrolledCourseMarks
 };
