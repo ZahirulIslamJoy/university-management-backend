@@ -1,5 +1,5 @@
-import { USER_ROLE } from '../../modules/user/user.constant';
-import { User } from '../../modules/user/user.model';
+import { USER_ROLE } from '../modules/user/user.constant';
+import { User } from '../modules/user/user.model';
 import config from '../config';
 
 const superUser = {
